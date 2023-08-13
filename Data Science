@@ -1,0 +1,4 @@
+import pandas as pd
+df=pd.read_csv('C:/Users/Jayanthi/OneDrive/Desktop/ML Workshop/Dataset/Dataset/regression/AutoMPG.csv')
+df 
+
