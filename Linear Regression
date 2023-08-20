@@ -1,0 +1,27 @@
+import pandas as pd
+
+df=pd.read_csv('C:/Users/Jayanthi/OneDrive/Desktop/ML Workshop/Dataset/Dataset/regression/AutoMPG.csv')
+df.head()
+drop_columns=['model year','origin','car name']
+df.drop(drop_columns , axis=1 , inplace=True)
+print(df.head())
+print(df.dtypes)
+
+horsepower_mean=0
+for v in df['horsepower'].values.ravel():
+    try:
+        horsepower_mean +=int(v)
+    except:
+        pass
+
+horsepower_mean=horsepower_mean/len(df)
+df['horsepower'].replace({'?':horsepower_mean},inplace=True)
+df['horsepower'] =df['horsepower'].astype(int)
+print(df.dtypes)
+x=df.values[:,:-1]
+y=df.values[:,-1]
+print(x.shape)
+lr=LinearRegression()
+lr.fit(x,y)
+print('Betas:',lr.betas)
+pred=lr.predict(x)
