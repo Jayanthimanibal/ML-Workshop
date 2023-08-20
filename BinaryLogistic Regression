@@ -1,0 +1,20 @@
+import numpy as np
+import pandas as pd
+
+class BinaryLogisticRegression:
+    def __init__(self):
+        self.betas=[]
+    def concat_ones(self,x):
+            ones=np.ones_like(x)
+            return np.concatenate([ones,x],axis=1)
+    def fit(self,x,y):
+            #b=(xtx)-1(xty)
+            x=self.concat_ones(x)
+            xt=x.T
+            xtx=np.dot(xt,x)
+            xtx_inv=np.linalg.pinv(xtx)
+            xty=np.dot(xt,y)
+            self.betas=np.dot(xtx_inv,xty)
+    def predict_proba(self,x):
+        x=self.concat_ones(x)
+        z=np.dot(x,self.betas)
