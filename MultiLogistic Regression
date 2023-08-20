@@ -1,0 +1,39 @@
+class MultiLogisticRegression:
+    def __init__(self):
+        self.betas=[]
+    def concat_ones(self,x):
+            ones=np.ones_like(x)
+            return np.concatenate([ones,x],axis=1)
+    def one_hot_encode(self,y):
+        y=y.astype(int)
+        n_classes=len(np.unique(y))
+        return np.eye(n_classes)[y].astype(int)
+    def fit(self,x,y):
+            #b=(xtx)-1(xty)
+            y=self.one_hot_encode(y)
+            x=self.concat_ones(x)
+            xt=x.T
+            xtx=np.dot(xt,x)
+            xtx_inv=np.linalg.pinv(xtx)
+            xty=np.dot(xt,y)
+            self.betas=np.dot(xtx_inv,xty)
+    def predict_proba(self,x):
+        x=self.concat_ones(x)
+        z=np.dot(x,self.betas)
+        return np.exp(z)/np.sum(np.exp(z))
+    def predict(self,x):
+        prob=self.predict_proba(x)
+        return np.argmax(prob,axis=1)
+df=pd.read_csv('fashion-mnist.csv')
+df.head()
+
+x=df.values[:, :-1]
+y=df.values[:, -1]
+blr = MultiLogisticRegression()
+blr.fit(x,y)
+prob=blr.predict_proba(x)
+pred=blr.predict(x)
+print(prob)
+from sklearn.metrics import accuracy_score,confusion_matrix
+print('accuracy:',accuracy_score(y,pred))
+print('CM:',confusion_matrix(y,pred))
